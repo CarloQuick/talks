@@ -2,6 +2,11 @@
 # build.sh
 
 DIR="talks/seattle"
+INTRO="$DIR"/intro
+TECH="$DIR"/technical
+BUILD="$DIR"/build
+OUTRO="$DIR"/outro
+RECAP="$DIR"/recap
 
 cat > "$DIR/presentation.md" << 'FRONTMATTER'
 ---
@@ -16,31 +21,30 @@ author: Carlo Quick
 FRONTMATTER
 
 cat >> "$DIR/presentation.md" \
-    "$DIR/outcome.md" \
-    "$DIR/intro.md" \
-    "$DIR/vm_vs_containers.md" \
-    "$DIR/namespaces_and_cgroups.md" \
-    "$DIR/root_problem.md" \
-    "$DIR/rootless_containers.md" \
-    "$DIR/why_rust.md" \
-    "$DIR/tools.md" \
-    "$DIR/guided_build.md" \
-    "$DIR/process_baseline.md" \
-    "$DIR/trying_set_hostname.md" \
-    "$DIR/unshare.md" \
-    "$DIR/unshare_uts_namespace_attempt.md" \
-    "$DIR/uid_gid_map_explanation.md" \
-    "$DIR/unshare_user_uts_namespace_success.md" \
-    "$DIR/unshare_pid_namespace_attempt.md" \
-    "$DIR/fork.md" \
-    "$DIR/fn_child.md" \
-    "$DIR/fork_child.md" \
-    "$DIR/inspect_child_process.md" \
-    "$DIR/unshare_mount_namespace.md" \
-    "$DIR/recap.md" \
-    "$DIR/finishline.md" \
-    "$DIR/bento.md" \
-    "$DIR/refs.md" \
-    "$DIR/thanks.md"
+    "$INTRO/intro.md" \
+    "$TECH/vm_vs_containers.md" \
+    "$TECH/namespaces_and_cgroups.md" \
+    "$TECH/root_problem.md" \
+    "$TECH/rootless_containers.md" \
+    "$TECH/why_rust.md" \
+    "$TECH/tools.md" \
+    "$BUILD/01_guided_build.md" \
+    "$BUILD/02_process_baseline.md" \
+    "$BUILD/03_trying_set_hostname.md" \
+    "$TECH/unshare.md" \
+    "$BUILD/04_unshare_uts_namespace_attempt.md" \
+    "$BUILD/05_uid_gid_map_explanation.md" \
+    "$BUILD/06_unshare_user_uts_namespace_success.md" \
+    "$BUILD/07_unshare_pid_namespace_attempt.md" \
+    "$BUILD/08_fork.md" \
+    "$BUILDR/09_fn_child.md" \
+    "$BUILD/10_fork_child.md" \
+    "$BUILD/11_inspect_child_process.md" \
+    "$BUILD/12_unshare_mount_namespace.md" \
+    "$RECAP/recap.md" \
+    "$BUILD/13_finishline.md" \
+    "$OUTRO/bento.md" \
+    "$OUTROR/refs.md" \
+    "$OUTRO/thanks.md"
 
 presenterm "$DIR/presentation.md" -x

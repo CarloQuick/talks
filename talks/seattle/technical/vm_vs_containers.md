@@ -2,7 +2,11 @@
 VMs vs Containers
 ===
 
-![](../assets/vm_cont.png)
+![](../assets/vm_vs_cont.png)
+![](../assets/vm_cont_table.png)
+
+**Virtual Machines** = hardware isolation.
+**Containers** = process isolation.
 
 <!-- font_size: 2 -->
 <!-- alignment: center -->
