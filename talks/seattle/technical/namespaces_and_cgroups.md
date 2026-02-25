@@ -1,9 +1,11 @@
+<!-- font_size: 4 -->
 Namespaces and Cgroups?
 ===
 
 <!-- column_layout: [1, 1] -->
 <!-- column: 0 -->
-
+<!-- pause -->
+<!-- font_size: 2 -->
 # Namespaces
 
 - control what a process can **see**.
@@ -12,20 +14,21 @@ Namespaces and Cgroups?
 <!-- column: 1 -->
 
 # Cgroups
-
-<!-- pause -->
-
 - control what a process can **use**.
 
 <!-- pause -->
 <!-- reset_layout -->
-
+<!-- new_lines: 2 -->
 **Namespaces** give a process its own view of things like PIDs, hostnames, and filesystems. **Cgroups** keep it from eating all your CPU and memory.
 
 Today, we're focusing entirely on **namespaces**. Cgroups are important — but that's a whole other talk.
-
-Namespaces
-
+<!-- end_slide -->
+<!-- skip_slide -->
+<!-- font_size: 4 -->
+Namespaces and CloneFlags
+===
+<!-- alignment: center -->
+<!-- font_size: 2 -->
 | Namespace | Flag | Page | Isolates | 
 |:---|:---|:---|:---|
 | Cgroup |CLONE_NEWCGROUP |cgroup_namespaces(7) |  Cgroup root directory |
@@ -37,51 +40,35 @@ Namespaces
 | User | CLONE_NEWUSER | user_namespaces(7) | User and group IDs |
 | UTS | CLONE_NEWUTS | uts_namespaces(7) | Hostname and NIS domain name |
 
-<!-- pause -->
+<!-- end_slide -->
 
-# Container vs Host's Perspective
-
+<!-- font_size: 4 -->
+Container vs Host's Perspective
+===
 <!-- column_layout: [1, 1] -->
 <!-- column: 0 -->
-
+<!-- alignment: center -->
+<!-- font_size: 2 -->
 **Container's View**
 
-```
-┌─────────────────────────┐
-│  "I'm the whole machine"│
-│                         │
-│  PID:  1                │
-│  Host: my-container     │
-│  Root: /                │
-│  Procs: just me         │
-│                         │
-│  👑 I am alone.         │
-└─────────────────────────┘
-```
+"I'm the whole machine"
 
+* PID:  1
+* Host: my-container
+* Root: /
+* Procs: just me
+* 👑 I am alone!
+
+![](../assets/alone.jpg)
 <!-- column: 1 -->
-
+<!-- alignment: center -->
 **Host's View**
 
-```
-┌─────────────────────────┐
-│  Processes:             │
-│  ├─ PID 1    systemd    │
-│  ├─ PID 435  sshd       │
-│  ├─ PID 1200 nginx      │
-│  ├─ PID 4812 "container"│ ←
-│  ├─ PID 4999 postgres   │
-│  └─ ...                 │
-└─────────────────────────┘
-```
+* PID 1     systemd
+* PID 435   sshd
+* PID 1200  nginx
+* PID 4812  "container"  ←
+* PID 4999  postgres
+...
 
-<!-- reset_layout -->
-
-<!-- pause -->
-
-That asymmetry is the **core idea** behind containers.
-
-<!-- pause -->
-
-With that — let's talk about what it means to run containers **without root**: going _rootless_.
 <!-- end_slide -->
