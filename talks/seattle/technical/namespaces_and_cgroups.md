@@ -1,5 +1,5 @@
-<!-- font_size: 4 -->
-Namespaces and Cgroups?
+
+Namespaces and Cgroups
 ===
 
 <!-- column_layout: [1, 1] -->
@@ -23,12 +23,25 @@ Namespaces and Cgroups?
 
 Today, we're focusing entirely on **namespaces**. Cgroups are important — but that's a whole other talk.
 <!-- end_slide -->
+
+Namespaces
+===
+# Each process has a /proc/[pid]/ns subdirectory its namespaces.
+* PID
+* Network (network stack)
+* Mount (fs mount point)
+* UTS (hostname and system identifier)
+* IPC (inter-process communication)
+* User (user and group id)
+* Cgroup
+<!-- alignment: center -->
+![](./assets/proc_sleep.png)
+
+<!-- end_slide -->
 <!-- skip_slide -->
-<!-- font_size: 4 -->
-Namespaces and CloneFlags
+Namespaces
 ===
 <!-- alignment: center -->
-<!-- font_size: 2 -->
 | Namespace | Flag | Page | Isolates | 
 |:---|:---|:---|:---|
 | Cgroup |CLONE_NEWCGROUP |cgroup_namespaces(7) |  Cgroup root directory |
@@ -40,9 +53,10 @@ Namespaces and CloneFlags
 | User | CLONE_NEWUSER | user_namespaces(7) | User and group IDs |
 | UTS | CLONE_NEWUTS | uts_namespaces(7) | Hostname and NIS domain name |
 
-<!-- end_slide -->
+![](./assets/proc_sleep.png)
 
-<!-- font_size: 4 -->
+<!-- end_slide -->
+<!-- skip_slide -->
 Container vs Host's Perspective
 ===
 <!-- column_layout: [1, 1] -->
@@ -54,12 +68,9 @@ Container vs Host's Perspective
 "I'm the whole machine"
 
 * PID:  1
-* Host: my-container
-* Root: /
-* Procs: just me
-* 👑 I am alone!
+👑 I am alone!
 
-![](../assets/alone.jpg)
+![](./assets/alone.jpg)
 <!-- column: 1 -->
 <!-- alignment: center -->
 **Host's View**

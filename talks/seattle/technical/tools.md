@@ -1,4 +1,4 @@
-The Tools
+The Tools (nix crate)
 ===
 
 The **nix** crate wraps low-level libc calls in idiomatic Rust — not by hiding danger, but by making it explicit in the type system.

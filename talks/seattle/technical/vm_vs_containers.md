@@ -1,15 +1,15 @@
-<!-- font_size: 4 -->
-VMs vs Containers
+
+isolation
 ===
-
-![](../assets/vm_vs_cont.png)
-
+<!-- column_layout: [1, 1] -->
+<!-- pause -->
+<!-- column: 0 -->
+![image:width:100%](./assets/vm.png)
 <!-- font_size: 2 -->
-**Virtual Machines** = hardware isolation.
-**Containers** = process isolation.
+* **Virtual Machines**: machine-level isolation.
+<!-- pause -->
+<!-- column: 1 -->
+![image:width:100%](./assets/container.png)
+* **Containers**: process-level isolation.
 
-<!-- font_size: 2 -->
-<!-- alignment: center -->
-# How Does Linux Pull This Off?
-<!-- reset_layout -->
 <!-- end_slide -->

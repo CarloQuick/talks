@@ -1,14 +1,13 @@
-<!-- font_size: 4 -->
-Why Rust?
+Rust + exploring Linux kernel = ❤️
 ===
-<!-- alignment: center -->
 <!-- font_size: 2 -->
-<!-- pause -->
-# How does Rust make exploring Linux kernel concepts far more approachable
 <!-- pause -->
 # Rust doesn't invent new container primitives. It doesn't replace syscalls.
 
-* It gives you **compiler-enforced honesty**.
+🦀
+<!-- pause -->
+# It gives you **compiler-enforced honesty**!
+<!-- pause -->
 * Fallible operation returns a `Result`
 * Unsafe operation is explicitly marked
 * Boundaries between safe and dangerous are **visible in the code**
@@ -16,6 +15,9 @@ Why Rust?
 The language refuses to let you gloss over the hard parts.
 <!-- end_slide -->
 
+fork(): C vs. Rust
+===
+* `fork()` creates a new process by duplicating the calling process. The new process is referred to as the child process.
 <!-- column_layout: [1, 1] -->
 <!-- column: 0 -->
 ```c

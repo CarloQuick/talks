@@ -1,0 +1,32 @@
+Process Baseline
+===
+```rust +exec:rust-script +id:process_baseline
+# //! ```cargo
+# //! [dependencies]
+# //! anyhow = "1.0.100"
+# //! nix = { version = "0.30.1", features = ["sched", "fs", "mount", "process", "hostname", "signal","user"] }
+# //! ```
+# use anyhow::Result;
+# use nix::unistd::{ getcwd, gethostname, getpid, getuid };
+# fn print_proc_info(label: &str) -> Result<()> {
+#    eprintln!("[{}]", label);
+#    eprintln!(
+#        "uid [{}]\n\thostname [{:?}]  \n\tpid [{}] \n\tcwd [{:?}]",
+#        getuid(),
+#        gethostname()?,
+#        getpid(),
+#        getcwd()?,
+#    );
+#    Ok(())
+# }
+
+fn main() -> Result<()> {
+    print_proc_info("Before Isolation")?;
+    Ok(())
+}
+```
+
+
+<!-- snippet_output: process_baseline -->
+
+<!-- end_slide -->

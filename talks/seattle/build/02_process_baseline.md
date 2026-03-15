@@ -1,11 +1,10 @@
 Process Baseline
 ===
-<!-- column_layout: [2, 3] -->
+<!-- column_layout: [1, 1] -->
 
 
 <!-- column: 0 -->
-
-````rust +exec:rust-script +id:process_baseline
+```rust +exec:rust-script +id:process_baseline
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
@@ -24,13 +23,11 @@ Process Baseline
 #    );
 #    Ok(())
 # }
-
 fn main() -> Result<()> {
     print_proc_info("Before Isolation")?;
     Ok(())
 }
-````
-
+```
 <!-- column: 1 -->
 <!-- snippet_output: process_baseline -->
 
