@@ -1,3 +1,4 @@
+
 Rust + exploring Linux kernel = ❤️
 ===
 <!-- font_size: 2 -->
@@ -36,6 +37,10 @@ switch (pid) {
         exit(EXIT_SUCCESS);
 }
 ```
+* Returns `-1`, `0`, or a PID — you check manually
+* Errors surface via `errno`, not the return value
+* Nothing stops you from ignoring the error case
+
 <!-- column: 1 -->
 ```rust
 // Rust — nix::unistd::fork
@@ -52,4 +57,7 @@ match unsafe { fork() } {
     Err(_) => bail!("Fork failed."),
 }
 ```
+* Returns a `Result<ForkResult>` — exhaustive by design
+* The compiler requires you handle `Parent`, `Child`, and `Err`
+* `unsafe` is explicit — the danger is visible, not hidden
 <!-- end_slide -->

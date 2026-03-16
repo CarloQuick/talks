@@ -1,9 +1,11 @@
 unshare
 ===
 
-"disassociate parts of the process execution context" - unashare(2)
+# unshare(2)
+"disassociate parts of the process execution context"
 
-It takes a flag argument that specify which parts of the process' execution should be "unshared".
+<!-- pause -->
+It takes a flag argument that specifies which parts of the process' execution should be "unshared".
 
 For today's talk, we'll only be using:
 
@@ -13,7 +15,5 @@ For today's talk, we'll only be using:
 - CloneFlags::CLONE_NEWUTS - new uts (hostname) namespace
 - CloneFlags::CLONE_NEWPID - new pid namespace
 - CloneFlags::CLONE_NEWNS - new mount namespace
-
-...but there are many more
 
 <!-- end_slide -->

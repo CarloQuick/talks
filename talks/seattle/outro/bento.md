@@ -1,51 +1,42 @@
-# Bento 🍱
 
+Bento 🍱
+===
+<!-- alignment: center -->
 
-A rootless container runtime built from scratch in Rust.
+_A rootless container runtime, built from scratch in Rust._
 
+<!-- new_lines: 1 -->
+
+![](./assets/bento.png)
+
+<!-- new_lines: 1 -->
+
+* Parses and runs real OCI images (same format as Docker)
+* Isolates via Linux namespaces — no root required
+* Implements overlay filesystem for copy-on-write layers
+
+<!-- end_slide -->
+Bento 🍱 — under the hood
+===
 <!-- column_layout: [1, 1] -->
 <!-- column: 0 -->
-
-**What it does:**
-- Parses OCI-compliant container images
-- Isolates processes using Linux namespaces (user, PID, mount, UTS)
-- Implements overlay filesystem for copy-on-write layers
-- Manages container lifecycle
-
-
-**How it works:**
-- No root required — user namespaces for unprivileged isolation
-- Extracts and layers OCI images (same format as Docker)
-- Forks into isolated namespaces, mounts overlay, executes command
-
-<!-- column: 1 -->
-
-# CLI Commands
 ```bash
-# Create a container
+# Pull and create a container
 cargo run -- create my-container busybox
 
-# Start it
-cargo run -- start my-container
-
-# Run a command inside it
+# Attach to a running container's namespaces
+# and execute a command inside it
 cargo run -- exec my-container ls -la
-
-# Check status
-cargo run -- status my-container
-cargo run -- status --all
-
-# Graceful shutdown
-cargo run -- stop my-container
 
 # Force kill
 cargo run -- kill my-container
 ```
 
-**Future Plans:**
-- Cgroups
-- Network Namespaces
-- Split into 2 crates (bentod + bento)
-- Pseudoterminals
+<!-- column: 1 -->
+**Future Plans**
+* Cgroups
+* Network namespaces
+* Split into `bentod` + `bento`
+* Pseudoterminals
 
 <!-- end_slide -->

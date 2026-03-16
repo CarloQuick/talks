@@ -1,10 +1,11 @@
+
 Process Baseline
 ===
 <!-- column_layout: [1, 1] -->
 
 
 <!-- column: 0 -->
-```rust +exec:rust-script +id:process_baseline
+````rust +exec:rust-script +id:process_baseline
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
@@ -27,7 +28,9 @@ fn main() -> Result<()> {
     print_proc_info("Before Isolation")?;
     Ok(())
 }
-```
+````
+* A snapshot of the process before any isolation is applied
+* uid, hostname, pid, and cwd — our reference point for what changes
 <!-- column: 1 -->
 <!-- snippet_output: process_baseline -->
 

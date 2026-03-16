@@ -1,21 +1,18 @@
-unshare the uts namespace
+
+trying to do something container-y
 ===
+<!-- column_layout: [3, 2] -->
 
-<!-- column_layout: [2, 3] -->
 
-
-<!-- column: 1 -->
-````rust +exec:rust-script +id:failed_unshare_uts
+<!-- column: 0 -->
+````rust +exec:rust-script +id:containery
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
 # //! nix = { version = "0.30.1", features = ["sched", "fs", "mount", "process", "hostname", "signal","user"] }
 # //! ```
 use anyhow::{Context, Result};
-use nix::{
-    sched::{CloneFlags, unshare},
-    unistd::{ getcwd, gethostname, getpid, getuid, sethostname }
-};
+use nix::unistd::{ getcwd, gethostname, getpid, getuid, sethostname };
 # fn print_proc_info(label: &str) -> Result<()> {
 #    eprintln!("[{}]", label);
 #    eprintln!(
@@ -30,15 +27,14 @@ use nix::{
 
 fn main() -> Result<()> {
     print_proc_info("Before Isolation")?;
-
-    // === UTS NAMESPACE ===
-    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to create uts namespace")?;
-    sethostname("my-container")?;
-
+    sethostname("my-container").context("Failed to set container hostname")?;
     print_proc_info("After Isolation")?;
     Ok(())
 }
 ````
-<!-- column: 0 -->
-<!-- snippet_output: failed_unshare_uts -->
+* `sethostname` without a namespace — the hostname change affects the whole host
+* The output will show why this approach is a problem
+<!-- column: 1 -->
+<!-- snippet_output: containery -->
+
 <!-- end_slide -->

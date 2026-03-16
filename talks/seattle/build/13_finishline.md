@@ -1,9 +1,9 @@
-is this it?
+
+finish line
 ===
+<!-- column_layout: [1, 1] -->
 
-<!-- column_layout: [2, 3] -->
-
-<!-- column: 1 -->
+<!-- column: 0 -->
 ````rust +exec:rust-script +id:fork_child_with_mounted_proc
 # //! ```cargo
 # //! [dependencies]
@@ -37,66 +37,46 @@ is this it?
 # }
 fn child(container_dir: &PathBuf, rootfs: &PathBuf, argv: &[CString]) -> Result<()> {
     // === UTS NAMESPACE ===
-    unshare(CloneFlags::CLONE_NEWUTS)?;
-    sethostname("my-container")?;
-
+    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to isolate uts namespace")?;
+    sethostname("my-container")?; 
     // === MOUNT NAMESPACE ===
-    unshare(CloneFlags::CLONE_NEWNS)?;
-
-    mount(
-        Some(rootfs), 
-        container_dir, 
-        None::<&str>, 
-        MsFlags::MS_BIND, 
-        None::<&str>
-    )?;
+    unshare(CloneFlags::CLONE_NEWNS).context("Failed to isolate mount namespace")?;
+    mount(Some(rootfs), container_dir, None::<&str>, MsFlags::MS_BIND, None::<&str>).context("Failed to mount rootfs")?;
     // Change the root directory of the process
-    chroot(container_dir)?;
+    chroot(container_dir).context("Failed to change the root dir")?;
     // Set the process' current working directory
     std::env::set_current_dir("/")?;
-    // Create and mount procfs in container
-    std::fs::create_dir_all("/proc")?;
-    mount(
-        Some("proc"),
-        "/proc",
-        Some("proc"),
-        MsFlags::empty(),
-        None::<&str>,
-    )?;
-
-    print_proc_info("Child's Isolation")?;
+#    print_proc_info("Container Isolation")?;
     execvp(&argv[0], argv)?;
-
     Ok(())
 }
-
-# fn main() -> Result<()> {
+fn main() -> Result<()> {
 #    const ROOT_FS: &str = "/home/cquick/talks/rootfs";
 #    const CONTAINER_DIR: &str = "/home/cquick/talks/container";
 #    let rootfs = PathBuf::from(ROOT_FS);
 #    let container_dir = PathBuf::from(CONTAINER_DIR);
 #    print_proc_info("Before Isolation")?;
-#    // === USER NAMESPACE ===
-#    let uid_map = format!("0 {} 1", nix::unistd::getuid());
-#    let gid_map = format!("0 {} 1", nix::unistd::getgid());
-#    unshare(CloneFlags::CLONE_NEWUSER)?;
-#    write_proc_mappings(&uid_map, &gid_map)?;
-#    // === PID NAMESPACE - next forked child will be PID 1 ===
-#    unshare(CloneFlags::CLONE_NEWPID)?;
-#    match unsafe { fork() } {
-#        Ok(ForkResult::Parent { child }) => {
-#            waitpid(child, None)?;
-#        }
-#        Ok(ForkResult::Child) => {
-#            let argv = vec![CString::new("ls")?];
-#            child(&container_dir, &rootfs, &argv)?;
-#        }
-#        Err(err) => Err(err).context("Fork failed!")?,
-#    }
-#    Ok(())
-# }
+    // === USER NAMESPACE ===
+    let uid_map = format!("0 {} 1", nix::unistd::getuid());
+    let gid_map = format!("0 {} 1", nix::unistd::getgid());
+    unshare(CloneFlags::CLONE_NEWUSER)?;
+    write_proc_mappings(&uid_map, &gid_map)?;
+    // === PID NAMESPACE - next forked child will be PID 1 ===
+    unshare(CloneFlags::CLONE_NEWPID)?;
+    match unsafe { fork() } {
+        Ok(ForkResult::Parent { child }) => {
+            waitpid(child, None)?;
+        }
+        Ok(ForkResult::Child) => {
+            let argv = vec![CString::new("ls")?];
+            child(&container_dir, &rootfs, &argv)?;
+        }
+        Err(err) => Err(err).context("Fork failed!")?,
+    }
+    Ok(())
+}
 ````
-<!-- column: 0 -->
+<!-- column: 1 -->
 <!-- snippet_output: fork_child_with_mounted_proc -->
 <!--pause -->
 🎉🎉🎉 Container checklist 🎉🎉🎉

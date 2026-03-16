@@ -1,7 +1,11 @@
-unshare pid namespace + fork()
+(a little) isolation achieved!
 ===
+<!-- column_layout: [3, 2] -->
 
-````rust
+
+<!-- column: 0 -->
+
+````rust +exec:rust-script +id:kinda_isolation
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
@@ -10,8 +14,7 @@ unshare pid namespace + fork()
 # use anyhow::{Context, Result};
 # use nix::{
 #    sched::{CloneFlags, unshare},
-#     sys::wait::waitpid,
-#    unistd::{ ForkResult, getcwd, gethostname, getpid, getuid, sethostname, fork }
+#    unistd::{ getcwd, gethostname, getpid, getuid, sethostname }
 # };
 # fn print_proc_info(label: &str) -> Result<()> {
 #    eprintln!("[{}]", label);
@@ -31,30 +34,32 @@ unshare pid namespace + fork()
 #    std::fs::write("/proc/self/gid_map", gid_map).context("Failed to write to gid")?;
 #    Ok(())
 # }
-# fn main() -> Result<()> {
-#   print_proc_info("Before Isolation")?;
-#   // === USER NAMESPACE ===
-#   let uid_map = format!("0 {} 1", nix::unistd::getuid());
-#   let gid_map = format!("0 {} 1", nix::unistd::getgid());
-#   unshare(CloneFlags::CLONE_NEWUSER).context("Failed to create user namespace")?;
-#   write_proc_mappings(&uid_map, &gid_map)?;
+fn main() -> Result<()> {
+    print_proc_info("Before Isolation")?;
+    // === USER NAMESPACE ===
+    let uid_map = format!("0 {} 1", nix::unistd::getuid());
+    let gid_map = format!("0 {} 1", nix::unistd::getgid());
+    unshare(CloneFlags::CLONE_NEWUSER).context("Failed to isolate user namespace")?;
+    write_proc_mappings(&uid_map, &gid_map)?;
 
-    // ↑↑ USER and UTS NAMESPACE Isolation ↑↑
-    // === PID NAMESPACE - next forked child will be PID 1 ===
-    unshare(CloneFlags::CLONE_NEWPID).context("Failed to create a PID namespace")?;
-    
-    // Fork() creates a child process by duplicating the parent
-    match unsafe { fork() } {
-        Ok(ForkResult::Parent { child }) => {
-            // -- snip --
-        }
-        Ok(ForkResult::Child) => {
-            // -- snip --
-        }
-        Err(err) => Err(err).context("Fork failed!")?,
-    }
-#   Ok(())
-# }
+    // === UTS NAMESPACE ===
+    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to isolate uts namespace")?;
+    sethostname("my-container")?;
+    print_proc_info("After Isolation")?;
+    Ok(())
+}
 ````
+* User namespace first — unlocks the ability to create other namespaces without root
+* UTS namespace isolates the hostname — the host is unaffected
+<!-- column: 1 -->
+<!-- snippet_output: kinda_isolation -->
+<!-- reset_layout -->
+
+
+<!-- pause -->
+How about on the host?
+```bash +exec
+hostname
+```
 
 <!-- end_slide -->

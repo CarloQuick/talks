@@ -26,7 +26,7 @@ Today, we're focusing entirely on **namespaces**. Cgroups are important — but 
 
 Namespaces
 ===
-# Each process has a /proc/[pid]/ns subdirectory its namespaces.
+# Each process has a /proc/[pid]/ns subdirectory for its namespaces.
 * PID
 * Network (network stack)
 * Mount (fs mount point)
@@ -36,7 +36,7 @@ Namespaces
 * Cgroup
 <!-- alignment: center -->
 ![](./assets/proc_sleep.png)
-
+_Each symlink points to the namespace instance the process currently belongs to._
 <!-- end_slide -->
 <!-- skip_slide -->
 Namespaces

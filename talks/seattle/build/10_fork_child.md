@@ -1,7 +1,12 @@
-child()
-===
 
-````rust
+forking a child process
+===
+<!-- column_layout: [3, 2] -->
+
+
+<!-- column: 0 -->
+
+````rust +exec:rust-script +id:forking_proc_child
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
@@ -33,23 +38,22 @@ child()
 # }
 fn child() -> Result<()> {
     // === UTS NAMESPACE ===
-    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to create uts namespace")?;
+    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to isolate uts namespace")?;
     sethostname("my-container")?;
 
-    print_proc_info("Child Level Isolation")?;
+    print_proc_info("Child Isolation")?;
     Ok(())
 }
 fn main() -> Result<()> {
-    // -- snip -- ↑↑ USER and PID NAMESPACE Isolation ↑↑
-#   print_proc_info("Before Isolation")?;
-#   // === USER NAMESPACE ===
-#   let uid_map = format!("0 {} 1", nix::unistd::getuid());
-#   let gid_map = format!("0 {} 1", nix::unistd::getgid());
-#   unshare(CloneFlags::CLONE_NEWUSER).context("Failed to create user namespace")?;
-#   write_proc_mappings(&uid_map, &gid_map)?;
-#    // === PID NAMESPACE - next forked child will be PID 1 ===
-#    unshare(CloneFlags::CLONE_NEWPID).context("Failed to create a PID namespace")?;    
-#    // Fork() creates a child process by duplicating the parent
+    print_proc_info("Before Isolation")?;
+    // === USER NAMESPACE ===
+    let uid_map = format!("0 {} 1", nix::unistd::getuid());
+    let gid_map = format!("0 {} 1", nix::unistd::getgid());
+    unshare(CloneFlags::CLONE_NEWUSER).context("Failed to create user namespace")?;
+    write_proc_mappings(&uid_map, &gid_map)?;
+    // === PID NAMESPACE - next forked child will be PID 1 ===
+    unshare(CloneFlags::CLONE_NEWPID).context("Failed to isolate PID namespace")?;    
+    // fork() creates a child process by duplicating the parent
     match unsafe { fork() } {
         Ok(ForkResult::Parent { child }) => {
             waitpid(child, None)?;
@@ -57,9 +61,14 @@ fn main() -> Result<()> {
         Ok(ForkResult::Child) => {
             child()?;
         }
-        Err(err) => Err(err).context("Fork failed!")?,
+        Err(err) => Err(err).context("fork() failed")?,
     }
    Ok(())
-# }
+ }
 ````
+* The full picture — user namespace, PID namespace, fork, and child isolation all together
+* Check the output: uid is 0, hostname is `my-container`, PID is 1
+<!-- column: 1 -->
+<!-- snippet_output: forking_proc_child -->
+
 <!-- end_slide -->

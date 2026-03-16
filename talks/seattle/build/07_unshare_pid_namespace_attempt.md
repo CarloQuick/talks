@@ -1,11 +1,12 @@
-isolation (kinda) achieved!
+
+pid namespace
 ===
-<!-- column_layout: [2, 3] -->
+<!-- column_layout: [3, 2] -->
 
 
-<!-- column: 1 -->
+<!-- column: 0 -->
 
-````rust +exec:rust-script +id:kinda_isolation
+````rust +exec:rust-script +id:not_desired_pid_result
 # //! ```cargo
 # //! [dependencies]
 # //! anyhow = "1.0.100"
@@ -34,31 +35,25 @@ isolation (kinda) achieved!
 #    std::fs::write("/proc/self/gid_map", gid_map).context("Failed to write to gid")?;
 #    Ok(())
 # }
-# fn main() -> Result<()> {
-#    print_proc_info("Before Isolation")?;
-    // === USER NAMESPACE ===
-    let uid_map = format!("0 {} 1", nix::unistd::getuid());
-    let gid_map = format!("0 {} 1", nix::unistd::getgid());
-    unshare(CloneFlags::CLONE_NEWUSER).context("Failed to create user namespace")?;
-    write_proc_mappings(&uid_map, &gid_map)?;
-
-    // === UTS NAMESPACE ===
-    unshare(CloneFlags::CLONE_NEWUTS).context("Failed to create uts namespace")?;
-    sethostname("my-container")?;
-#    print_proc_info("After Isolation")?;
-#    Ok(())
-# }
+fn main() -> Result<()> {
+  print_proc_info("Before Isolation")?;
+  // === USER NAMESPACE ===
+  let uid_map = format!("0 {} 1", nix::unistd::getuid());
+  let gid_map = format!("0 {} 1", nix::unistd::getgid());
+  unshare(CloneFlags::CLONE_NEWUSER).context("Failed to isolate user namespace")?;
+  write_proc_mappings(&uid_map, &gid_map)?;
+  // === UTS NAMESPACE ===
+  unshare(CloneFlags::CLONE_NEWUTS).context("Failed to isolate uts namespace")?;
+  sethostname("my-container")?;
+  // === PID NAMESPACE - next forked child will be PID 1 ===
+  unshare(CloneFlags::CLONE_NEWPID).context("Failed to isolate PID namespace")?;
+  print_proc_info("After Isolation")?;
+  Ok(())
+}
 ````
+* `CLONE_NEWPID` is set — but the output still shows the original PID
+* The new namespace only takes effect for the **next forked child**, not the current process
 
-<!-- column: 0 -->
-<!-- snippet_output: kinda_isolation -->
-
-
-<!--reset_layout -->
-<!-- pause -->
-Container Checklist
-* ✅ Rootless
-* ✅ Isolated Hostname
-* ❌ Believes it is PID 1
-* ❌ Isolated root filesystem
+<!-- column: 1 -->
+<!-- snippet_output: not_desired_pid_result -->
 <!-- end_slide -->

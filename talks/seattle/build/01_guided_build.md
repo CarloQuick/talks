@@ -1,8 +1,9 @@
+
 Guided Build
 ===
-> **Note**: This demonstration linux kernel specific. I will share the slides and github link at the end of the presentation if anyone would like to try it themselves. Remember, though, you'll need to be on a linux machine, linux vm, use wsl2, or in container with special privileges.
+> **Note**: This demonstration is Linux kernel specific. I will share the slides and github link at the end of the presentation if anyone would like to try it themselves. Remember, though, you'll need to be on a linux machine, linux vm, use wsl2, or in container with special privileges.
 
-These Are the only dependencies, that we'll need!
+These are the only dependencies, that we'll need!
 
 ```toml
 [dependencies]
