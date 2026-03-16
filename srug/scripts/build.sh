@@ -1,7 +1,7 @@
 #!/bin/bash
 # build.sh
 
-DIR="talks/seattle"
+DIR="srug"
 INTRO="$DIR"/intro
 TECH="$DIR"/technical
 BUILD="$DIR"/build
